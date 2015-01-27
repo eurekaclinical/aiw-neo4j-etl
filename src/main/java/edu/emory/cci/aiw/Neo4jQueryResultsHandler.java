@@ -12,18 +12,17 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
+import org.neo4j.tooling.GlobalGraphOperations;
 import org.protempa.KnowledgeSource;
-import org.protempa.KnowledgeSourceReadException;
 import org.protempa.PropositionDefinition;
 import org.protempa.ProtempaException;
+import org.protempa.dest.QueryResultsHandler;
+import org.protempa.dest.QueryResultsHandlerCloseException;
+import org.protempa.dest.QueryResultsHandlerProcessingException;
+import org.protempa.dest.QueryResultsHandlerValidationFailedException;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.UniqueId;
 import org.protempa.query.Query;
-import org.protempa.query.handler.QueryResultsHandler;
-import org.protempa.query.handler.QueryResultsHandlerInitException;
-import org.protempa.query.handler.QueryResultsHandlerProcessingException;
-import org.protempa.query.handler
-		.QueryResultsHandlerValidationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,28 +37,32 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 	private final Map<UniqueId, Node> nodes;
 	private final Map<String, RelationshipType> relations;
 	private final Map<String, Derivations.Type> deriveType;
-	private KnowledgeSource knowledgeSource;
+	private final KnowledgeSource knowledgeSource;
+	private final Query query;
 	private GraphDatabaseService db;
 	private Index<Node> typeIndex;
 	private Index<Relationship> relIndex;
+	private int keysProcessed = 0;
 
-	public Neo4jQueryResultsHandler(String inPath) {
+	public Neo4jQueryResultsHandler(String inPath, KnowledgeSource inKnowledgeSource, Query inQuery) {
 		this.dbPath = inPath;
 		this.nodes = new HashMap<UniqueId, Node>();
 		this.relations = new HashMap<String, RelationshipType>();
 		this.deriveType = new HashMap<String, Derivations.Type>();
-	}
-
-	@Override
-	public void init(KnowledgeSource knowledgeSource, Query query)
-			throws QueryResultsHandlerInitException {
-		this.knowledgeSource = knowledgeSource;
+		this.knowledgeSource = inKnowledgeSource;
+		this.query = inQuery;
 	}
 
 	@Override
 	public void start() throws QueryResultsHandlerProcessingException {
 		GraphDatabaseFactory factory = new GraphDatabaseFactory();
 		this.db = factory.newEmbeddedDatabase(this.dbPath);
+		for (Relationship r : GlobalGraphOperations.at(this.db).getAllRelationships()) {
+			r.delete();
+		}
+		for (Node n : GlobalGraphOperations.at(this.db).getAllNodes()) {
+			n.delete();
+		}
 		this.typeIndex = this.db.index().forNodes("__types");
 		this.relIndex = this.db.index().forRelationships("__rels");
 	}
@@ -95,12 +98,26 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 
 		// now we commit the transaction
 		transaction.success();
-		transaction.finish();
+		transaction.close();
+
+		// increment the number of patients we have added so far
+		this.keysProcessed++;
+	}
+
+	private void createStatsNode () {
+		Node node = this.db.createNode(Neo4jStatistics.NODE_LABEL);
+		node.setProperty(Neo4jStatistics.TOTAL_PROP, this.keysProcessed);
 	}
 
 	@Override
 	public void finish() throws QueryResultsHandlerProcessingException {
+		// add/update a statistics node to save the number of patients added
+		this.createStatsNode();
 		this.db.shutdown();
+	}
+
+	@Override
+	public void close() throws QueryResultsHandlerCloseException {
 	}
 
 	private Node node(Proposition inProposition) {
@@ -216,13 +233,11 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 
 	@Override
 	public void validate()
-			throws QueryResultsHandlerValidationFailedException,
-			KnowledgeSourceReadException {
+			throws QueryResultsHandlerValidationFailedException {
 	}
 
 	@Override
-	public String[] getPropositionIdsNeeded()
-			throws KnowledgeSourceReadException {
+	public String[] getPropositionIdsNeeded() {
 		return new String[0];
 	}
 }
