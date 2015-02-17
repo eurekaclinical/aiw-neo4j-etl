@@ -1,0 +1,51 @@
+Copyright 2015 Emory University
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+This project includes:
+  AIW Neo4j ETL under GNU General Public License, Version 3
+  Apache Commons Collections under The Apache Software License, Version 2.0
+  Apache Commons Exec under Apache License, Version 2.0
+  Apache Commons Lang under The Apache Software License, Version 2.0
+  Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
+  Commons CLI under The Apache Software License, Version 2.0
+  Commons IO under The Apache Software License, Version 2.0
+  ConcurrentLinkedHashMap under The Apache Software License, Version 2.0
+  Drools :: Rete-OO Core under The Apache Software License, Version 2.0
+  JavaUtil under Apache License, Version 2.0
+  je under Sleepycat License
+  JTA 1.1 under The Apache Software License, Version 2.0
+  kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
+  Lucene Core under Apache 2
+  mvel under The Apache Software License, Version 2.0
+  Neo4j - Cypher under GNU General Public License, Version 3
+  Neo4j - Cypher Commons under GNU General Public License, Version 3
+  Neo4j - Cypher Compiler 1.9 under GNU General Public License, Version 3
+  Neo4j - Cypher Compiler 2.0 under GNU General Public License, Version 3
+  Neo4j - Cypher Compiler 2.1 under GNU General Public License, Version 3
+  Neo4j - Graph Algorithms under GNU General Public License, Version 3
+  Neo4j - Graph Database Kernel under GNU General Public License, Version 3
+  Neo4j - Graph Matching under GNU General Public License, Version 3
+  Neo4j - JMX support under GNU General Public License, Version 3
+  Neo4j - Lucene Index under GNU General Public License, Version 3
+  Neo4j - Primitive Collections under GNU General Public License, Version 3
+  Neo4j - Usage Data Collection under GNU General Public License, Version 3
+  Neo4j Community under GNU General Public License, Version 3
+  opencsv under Apache 2
+  parboiled-core under Apache 2
+  parboiled-scala under Apache 2
+  Protempa Framework under Apache License, Version 2.0
+  Scala Library under BSD-like
+  SLF4J API Module under MIT License
+
