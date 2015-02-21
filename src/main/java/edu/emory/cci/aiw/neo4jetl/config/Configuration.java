@@ -30,4 +30,5 @@ public interface Configuration {
 	String[] getPropositionIds();
 
 	String getNeo4jHome();
+	
 }

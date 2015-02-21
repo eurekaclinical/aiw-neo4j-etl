@@ -67,9 +67,11 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(Neo4jQueryResultsHandler.class);
-	
+
 	public static final Label NODE_LABEL = DynamicLabel.label("Data");
 	
+	public static final int DEFAULT_COMMIT_FREQUENCY = 2000;
+
 	private final Map<UniqueId, Node> nodes;
 	private final Map<String, RelationshipType> relations;
 	private final Map<String, Derivations.Type> deriveType;
@@ -84,6 +86,8 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 	private final Configuration configuration;
 	private Neo4jHome home;
 	private final String keyType;
+	private Transaction transaction;
+	private int count;
 
 	Neo4jQueryResultsHandler(Query inQuery, DataSource dataSource, Configuration configuration) throws QueryResultsHandlerInitException {
 		this.nodes = new HashMap<>();
@@ -124,7 +128,7 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		} catch (Exception ioe) {
 			throw new QueryResultsHandlerProcessingException(ioe);
 		}
-
+		this.transaction = this.db.beginTx();
 	}
 
 	@Override
@@ -138,37 +142,60 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		// clear out the previous patient's data
 		this.nodes.clear();
 
-		// start a new transaction to load the patient's data
-		try (Transaction transaction = this.db.beginTx()) {
-
+		if (++this.count % DEFAULT_COMMIT_FREQUENCY == 0) {
 			try {
-				// now create relationships for the references
-				handleReferences(propositions, references);
-
-				// now create relationships for the forward derivations
-				handleDerivations(forwardDerivations, true);
-
-				// now create relationships for the backward derivations
-				handleDerivations(backwardDerivations, false);
-
-				// now we commit the transaction
-				transaction.success();
-			} catch (ProtempaException e) {
-				transaction.failure();
-				throw new QueryResultsHandlerProcessingException(e);
+				if (this.transaction != null) {
+					this.transaction.success();
+					this.transaction.close();
+					this.transaction = null;
+				}
+				this.transaction = this.db.beginTx();
 			} catch (Exception ex) {
-				transaction.failure();
-				throw new QueryResultsHandlerProcessingException(ex);
+				if (this.transaction != null) {
+					try {
+						this.transaction.close();
+					} catch (Exception ignore) {
+					}
+				}
+				throw ex;
 			}
-
 		}
 
+		try {
+			// now create relationships for the references
+			handleReferences(propositions, references);
+
+			// now create relationships for the forward derivations
+			handleDerivations(forwardDerivations, true);
+
+			// now create relationships for the backward derivations
+			handleDerivations(backwardDerivations, false);
+		} catch (ProtempaException e) {
+			transaction.failure();
+			throw new QueryResultsHandlerProcessingException(e);
+		} catch (Exception ex) {
+			transaction.failure();
+			throw new QueryResultsHandlerProcessingException(ex);
+		}
 	}
 
 	@Override
 	public void finish() throws QueryResultsHandlerProcessingException {
 		// add/update a statistics node to save the number of patients added
 		if (this.db != null) {
+			try {
+				this.transaction.success();
+				this.transaction.close();
+				this.transaction = null;
+			} catch (Exception ex) {
+				if (this.transaction != null) {
+					try {
+						this.transaction.close();
+					} catch (Exception ignore) {
+					}
+				}
+				throw ex;
+			}
 			try (Transaction tx = this.db.beginTx()) {
 				try {
 					ResourceIterable<Node> findNodesByLabelAndProperty = this.db.findNodesByLabelAndProperty(Neo4jStatistics.NODE_LABEL, null, null);
@@ -207,7 +234,22 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 	@Override
 	public void close() throws QueryResultsHandlerCloseException {
 		if (this.db != null) {
-			this.db.shutdown();
+			try {
+				if (this.transaction != null) {
+					this.transaction.failure();
+					this.transaction.close();
+					this.transaction = null;
+				}
+			} catch (Exception ex) {
+				if (this.transaction != null) {
+					try {
+						this.transaction.close();
+					} catch (Exception ignore) {
+					}
+				}
+			} finally {
+				this.db.shutdown();
+			}
 		}
 		try {
 			this.home.startServer();
@@ -308,8 +350,8 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 			for (String name : names) {
 				List<UniqueId> ids = proposition.getReferences(name);
 				RelationshipType relation = this.getOrCreateRelation(name);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace(
 							"Processing {} references with type {} for {}",
 							ids.size(), name, proposition.getId());
 				}
@@ -359,6 +401,7 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		GraphDatabaseService newEmbeddedDatabase = factory.newEmbeddedDatabase(this.home.getDbPath().getAbsolutePath());
 		newEmbeddedDatabase.shutdown();
 		FileUtils.deleteRecursively(this.home.getDbPath());
+		LOGGER.info("Done deleting all data from {}", this.home.getDbPath());
 	}
 
 	private void grabOrCreateIndices() throws Exception {

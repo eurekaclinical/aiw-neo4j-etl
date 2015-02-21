@@ -35,6 +35,7 @@ import org.protempa.proposition.PrimitiveParameter;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.TemporalProposition;
 import org.protempa.proposition.interval.Interval;
+import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 import org.protempa.proposition.visitor.PropositionVisitor;
 
@@ -104,8 +105,8 @@ public class MapPropositionVisitor implements PropositionVisitor {
 
 	private void handleTemporal(TemporalProposition tempProp) {
 		Interval interval = tempProp.getInterval();
-		this.map.put("length", interval.getMaxLength());
-		this.map.put("lengthUnit", interval.getLengthUnit().getPluralName());
+		this.map.put("length", interval.getMinLength());
+		this.map.put("lengthUnit", tempProp.getLengthFormattedShort());
 		this.map.put("start", interval.getMinStart());
 		this.map.put("start_tval", tempProp.getStartFormattedShort());
 		this.map.put("finish", interval.getMinFinish());
