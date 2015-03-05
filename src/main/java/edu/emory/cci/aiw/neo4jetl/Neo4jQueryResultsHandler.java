@@ -39,9 +39,11 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterable;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.index.Index;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.graphdb.index.ReadableIndex;
 import org.neo4j.kernel.impl.util.FileUtils;
 import org.protempa.DataSource;
 import org.protempa.DataSourceReadException;
@@ -77,9 +79,6 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 	private final Map<String, Derivations.Type> deriveType;
 	private final Query query;
 	private GraphDatabaseService db;
-	private Index<Node> typeIndex;
-	private Index<Relationship> relIndex;
-	private Index<Node> uidIndex;
 	private Map<String, PropositionDefinition> cache;
 	private final PropositionDefinitionRelationForwardVisitor forwardVisitor;
 	private final PropositionDefinitionRelationBackwardVisitor backwardVisitor;
@@ -123,8 +122,12 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 				deleteAll();
 			}
 			GraphDatabaseFactory factory = new GraphDatabaseFactory();
-			this.db = factory.newEmbeddedDatabase(dbPath.getAbsolutePath());
-			grabOrCreateIndices();
+			GraphDatabaseBuilder dbBuilder = factory.newEmbeddedDatabaseBuilder(dbPath.getAbsolutePath());
+			this.db = dbBuilder.setConfig(GraphDatabaseSettings.node_keys_indexable, "__type,__uid").
+					setConfig(GraphDatabaseSettings.node_auto_indexing, "true").
+					setConfig(GraphDatabaseSettings.relationship_keys_indexable, "name").
+					setConfig(GraphDatabaseSettings.relationship_auto_indexing,"true").
+					newGraphDatabase();
 		} catch (Exception ioe) {
 			throw new QueryResultsHandlerProcessingException(ioe);
 		}
@@ -207,7 +210,8 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 							node = this.db.createNode(Neo4jStatistics.NODE_LABEL);
 						}
 					}
-					try (IndexHits<Node> hits = this.typeIndex.get("__type", this.keyType)) {
+					ReadableIndex<Node> autoIndex = this.db.index().getNodeAutoIndexer().getAutoIndex();
+					try (IndexHits<Node> hits = autoIndex.get("__type", this.keyType)) {
 						node.setProperty(Neo4jStatistics.TOTAL_KEYS,
 								hits.size());
 					}
@@ -285,7 +289,6 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		}
 		node.setProperty("displayName", pd != null ? pd.getDisplayName() : propId);
 		node.setProperty("__type", inProposition.getId());
-		this.typeIndex.add(node, "__type", node.getProperty("__type"));
 		inProposition.accept(visitor);
 		for (Map.Entry<String, Object> entry : visitor.getMap().entrySet()) {
 			if (entry.getValue() != null) {
@@ -293,7 +296,6 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 			}
 		}
 		node.setProperty("__uid", uid);
-		this.uidIndex.add(node, "__uid", node.getProperty("__uid"));
 		return node;
 	}
 
@@ -309,8 +311,7 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 			RelationshipType inRelation) {
 		Relationship relationship
 				= source.createRelationshipTo(target, inRelation);
-		this.relIndex.add(
-				relationship, "name", relationship.getType().name());
+		relationship.setProperty("name", relationship.getType().name());
 	}
 
 	private RelationshipType getOrCreateRelation(String name) {
@@ -404,17 +405,4 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		LOGGER.info("Done deleting all data from {}", this.home.getDbPath());
 	}
 
-	private void grabOrCreateIndices() throws Exception {
-		try (Transaction tx = this.db.beginTx()) {
-			try {
-				this.typeIndex = this.db.index().forNodes("__types");
-				this.relIndex = this.db.index().forRelationships("__rels");
-				this.uidIndex = this.db.index().forNodes("__uids");
-				tx.success();
-			} catch (Exception ex) {
-				tx.failure();
-				throw ex;
-			}
-		}
-	}
 }
