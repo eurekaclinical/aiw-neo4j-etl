@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.protempa.DataSource;
 import org.protempa.PropositionDefinition;
-import org.protempa.dest.QueryResultsHandler;
+import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerInitException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
@@ -47,7 +47,7 @@ import org.protempa.query.Query;
  *
  * @author Andrew Post
  */
-public class Neo4jQueryResultsHandler implements QueryResultsHandler {
+public class Neo4jQueryResultsHandler extends AbstractQueryResultsHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(Neo4jQueryResultsHandler.class.getName());
 	private final Neo4jQueryResultsHandlerWrapped wrapped;
@@ -67,9 +67,15 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 	private volatile QueryResultsHandlerProcessingException exception;
 	private volatile boolean atEnd;
 	private final Query query;
+	private final String id;
 
 	Neo4jQueryResultsHandler(Query inQuery, DataSource dataSource, Configuration configuration) throws QueryResultsHandlerInitException {
+		assert configuration != null : "configuration cannot be null";
+		assert inQuery != null : "inQuery cannot be null";
+		assert dataSource != null : "dataSource cannot be null";
+		
 		this.wrapped = new Neo4jQueryResultsHandlerWrapped(inQuery, dataSource, configuration);
+		this.id = configuration.getName();
 		this.startSynchronousQueue = new SynchronousQueue();
 		this.endSynchronousQueue = new SynchronousQueue();
 		this.handoffObject = new Object();
@@ -132,6 +138,11 @@ public class Neo4jQueryResultsHandler implements QueryResultsHandler {
 		};
 		this.wrappedThread.start();
 		this.query = inQuery;
+	}
+
+	@Override
+	public String getId() {
+		return this.id != null ? this.id : super.getId();
 	}
 
 	@Override

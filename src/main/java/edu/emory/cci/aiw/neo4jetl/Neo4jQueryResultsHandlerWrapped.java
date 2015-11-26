@@ -54,7 +54,7 @@ import org.protempa.DataSourceReadException;
 import org.protempa.KnowledgeSourceReadException;
 import org.protempa.PropositionDefinition;
 import org.protempa.ProtempaException;
-import org.protempa.dest.QueryResultsHandler;
+import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerInitException;
 import org.protempa.query.QueryMode;
@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author hrathod
  */
-public class Neo4jQueryResultsHandlerWrapped implements QueryResultsHandler {
+public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler {
 
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(Neo4jQueryResultsHandlerWrapped.class);

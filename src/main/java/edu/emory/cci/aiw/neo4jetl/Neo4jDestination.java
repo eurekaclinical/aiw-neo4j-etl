@@ -38,14 +38,21 @@ import org.protempa.query.Query;
 public class Neo4jDestination extends AbstractDestination {
 
 	private final Configuration configuration;
+	private final String id;
 
-	public Neo4jDestination (Configuration configuration) {
+	public Neo4jDestination(Configuration configuration) {
 		if (configuration == null) {
 			throw new IllegalArgumentException("configuration cannot be null");
 		}
 		this.configuration = configuration;
+		this.id = this.configuration.getName();
 	}
 
+	@Override
+	public String getId() {
+		return this.id != null ? this.id : super.getId();
+	}
+	
 	@Override
 	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource) throws QueryResultsHandlerInitException {
 		return new Neo4jQueryResultsHandler(query, dataSource, this.configuration);

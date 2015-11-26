@@ -31,8 +31,10 @@ public interface Configuration {
 
 	String getNeo4jHome();
 
-	public Object getNullValue();
+	Object getNullValue();
 	
-	public IndexOnProperty[] getPropertiesToIndex();
+	IndexOnProperty[] getPropertiesToIndex();
+	
+	String getName();
 	
 }
