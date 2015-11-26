@@ -5,7 +5,7 @@
     <groupId>edu.emory.cci.aiw</groupId>
     <artifactId>aiw-neo4j-etl</artifactId>
     <name>AIW Neo4j ETL</name>
-    <version>1.0-Alpha-2</version>
+    <version>1.0-Alpha-2-SNAPSHOT</version>
     <inceptionYear>2015</inceptionYear>
 	<description>AIW Neo4j ETL is a Protempa query results handler for loading data and 
 abstractions into the Neo4j graph database.</description>
@@ -23,7 +23,7 @@ abstractions into the Neo4j graph database.</description>
     
     <scm>
 		<developerConnection>scm:git:ssh://git.cci.emory.edu/opt/git/aiw/aiw-i2b2-etl.git</developerConnection>
-		<tag>aiw-neo4j-etl-1.0-Alpha-2</tag>
+		<tag>HEAD</tag>
     </scm>
 
     <issueManagement>
