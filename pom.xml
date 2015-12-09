@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.emory.cci.aiw</groupId>
+    <groupId>org.eurekaclinical</groupId>
     <artifactId>aiw-neo4j-etl</artifactId>
     <name>AIW Neo4j ETL</name>
     <version>1.0-Alpha-3-SNAPSHOT</version>
@@ -10,80 +10,39 @@
 	<description>AIW Neo4j ETL is a Protempa query results handler for loading data and 
 abstractions into the Neo4j graph database.</description>
     
-    <organization>
-        <name>Emory University</name>
-        <url>http://www.emory.edu</url>
-    </organization>
+    <parent>
+        <groupId>org.eurekaclinical</groupId>
+        <artifactId>eurekaclinical-parent</artifactId>
+        <version>1-SNAPSHOT</version>
+    </parent>
     
-    <url>http://aiw.sourceforge.net/dev/${project.build.finalName}</url>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <url>https://github.com/eurekaclinical/aiw-neo4j-etl.git</url>
     
     <scm>
-		<developerConnection>scm:git:https://github.com/eurekaclinical/aiw-neo4j-etl.git</developerConnection>
-		<tag>HEAD</tag>
+		<connection>scm:git:https://github.com/eurekaclinical/aiw-neo4j-etl.git</connection>
+        <developerConnection>scm:git:https://github.com/eurekaclinical/aiw-neo4j-etl.git</developerConnection>
+        <url>https://github.com/eurekaclinical/aiw-neo4j-etl.git</url>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://jira.cci.emory.edu:8080/jira/secure/Dashboard.jspa</url>
+        <system>GitHub</system>
+        <url>https://github.com/eurekaclinical/aiw-neo4j-etl/issues</url>
     </issueManagement>
-    
-    <distributionManagement>
-        <site>
-            <id>aiw.sourceforge.net</id>
-            <url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/${project.build.finalName}</url>
-        </site>
-        <repository>
-            <id>aiw</id>
-            <name>AIW Repo</name>
-            <url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
-        </repository>
-        <snapshotRepository>
-            <id>aiw-snapshots</id>
-            <name>AIW Snapshots Repo</name>
-            <url>http://maven.cci.emory.edu/nexus/content/repositories/aiw-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     
     <licenses>
         <license>
             <name>GNU General Public License, Version 3</name>
             <url>http://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
-            <distribution>manual</distribution>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>1.8</version>
                 <configuration>
                     <licenseName>gpl_v3</licenseName>
                     <roots>
@@ -96,58 +55,17 @@ abstractions into the Neo4j graph database.</description>
                         <xsd>xml</xsd>
                     </extraExtensions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>first</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                    </execution>
-                </executions>
             </plugin>
 			<plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>maven-notice-plugin</artifactId>
-                <version>1.0.6.1</version>
                 <configuration>
                     <noticeTemplate>etc/NOTICE.template</noticeTemplate>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>checkontest</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <phase>test</phase>
-                    </execution>
-                </executions>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.4.1</version>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>3.1.1</version>
-								</requireMavenVersion>
-							</rules>    
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <!-- newer versions don't filter correctly. -->
-                <version>2.4.1</version>
                 <configuration>
                     <descriptors>
                         <descriptor>assembly/src.xml</descriptor>
@@ -155,24 +73,6 @@ abstractions into the Neo4j graph database.</description>
                     </descriptors>
                     <tarLongFileMode>gnu</tarLongFileMode>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19</version>
             </plugin>
 		</plugins>
 	</build>
@@ -184,24 +84,21 @@ abstractions into the Neo4j graph database.</description>
 			<version>2.2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.protempa</groupId>
+			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
-			<version>3.0-Alpha-2</version>
+			<version>3.0-Alpha-5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-exec</artifactId>
-			<version>1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
 		</dependency>
 	</dependencies>
 

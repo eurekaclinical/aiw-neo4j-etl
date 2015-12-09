@@ -15,16 +15,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 This project includes:
   AIW Neo4j ETL under GNU General Public License, Version 3
+  Apache Commons CLI under Apache License, Version 2.0
   Apache Commons Codec under Apache License, Version 2.0
-  Apache Commons Collections under The Apache Software License, Version 2.0
+  Apache Commons Collections under Apache License, Version 2.0
   Apache Commons DBCP under The Apache Software License, Version 2.0
   Apache Commons Exec under Apache License, Version 2.0
-  Apache Commons Lang under The Apache Software License, Version 2.0
+  Apache Commons Lang under Apache License, Version 2.0
+  Apache Commons Logging under The Apache Software License, Version 2.0
   Apache Commons Pool under The Apache Software License, Version 2.0
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
-  Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
-  Commons Logging under The Apache Software License, Version 2.0
   ConcurrentLinkedHashMap under The Apache Software License, Version 2.0
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   JavaUtil under Apache License, Version 2.0
