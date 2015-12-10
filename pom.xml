@@ -13,7 +13,7 @@ abstractions into the Neo4j graph database.</description>
     <parent>
         <groupId>org.eurekaclinical</groupId>
         <artifactId>eurekaclinical-parent</artifactId>
-        <version>1-SNAPSHOT</version>
+        <version>1-Alpha-4</version>
     </parent>
     
     <url>https://github.com/eurekaclinical/aiw-neo4j-etl.git</url>
@@ -86,7 +86,7 @@ abstractions into the Neo4j graph database.</description>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
-			<version>3.0-Alpha-5-SNAPSHOT</version>
+			<version>3.0-Alpha-5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
