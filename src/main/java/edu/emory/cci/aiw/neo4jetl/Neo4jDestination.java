@@ -23,8 +23,10 @@ package edu.emory.cci.aiw.neo4jetl;
  */
 
 import edu.emory.cci.aiw.neo4jetl.config.Configuration;
+import java.util.List;
 import org.protempa.DataSource;
 import org.protempa.KnowledgeSource;
+import org.protempa.ProtempaEventListener;
 import org.protempa.dest.AbstractDestination;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerInitException;
@@ -54,7 +56,7 @@ public class Neo4jDestination extends AbstractDestination {
 	}
 	
 	@Override
-	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource) throws QueryResultsHandlerInitException {
+	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource, List<? extends ProtempaEventListener> eventListeners) throws QueryResultsHandlerInitException {
 		return new Neo4jQueryResultsHandler(query, dataSource, this.configuration);
 	}
 
