@@ -1,9 +1,9 @@
-# Protempa Neo4j Destination
+# Protempa Neo4j Tools
 
 [Department of Biomedical Informatics](http://bmi.emory.edu), [Emory University](http://www.emory.edu), Atlanta, GA
 
 ## What does it do?
-It is a [Protempa](https://github.com/eurekaclinical/protempa) destination for loading data into a Neo4j graph database. Protempa destinations implement the `org.protempa.dest.Destination` interface and process output from the temporal abstraction process. See the Protempa project's README for more details on Protempa's architecture.
+It provides a [Protempa](https://github.com/eurekaclinical/protempa) destination for loading data into a Neo4j graph database. Protempa destinations implement the `org.protempa.dest.Destination` interface and process output from the temporal abstraction process. See the Protempa project's README for more details on Protempa's architecture.
 
 ## Version history
 ### Version 1.0
