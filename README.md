@@ -15,6 +15,7 @@ Supports loading and updating a Neo4j database with the output of Protempa.
 
 ## Runtime requirements
 * [Oracle Java JRE 8](http://www.oracle.com/technetwork/java/javase/overview/index.html)
+* [Neo4j Community 2.2.2](http://neo4j.com)
 
 ## Building it
 The project uses the maven build tool. Typically, you build it by invoking `mvn clean install` at the command line. For simple file changes, not additions or deletions, you can usually use `mvn install`. See https://github.com/eurekaclinical/dev-wiki/wiki/Building-Eureka!-Clinical-projects for more details.
@@ -61,3 +62,6 @@ try (Protempa protempa = Protempa.newInstance(sourceFactory)) {
     protempa.execute(query, dest);
 }
 ```
+
+## License
+Unlike other Eureka! Clinical projects, this one is available under GNU Public License version 3 due to the licensing of the Neo4j libraries on which this project depends.
