@@ -63,7 +63,7 @@ try (Protempa protempa = Protempa.newInstance(sourceFactory)) {
 }
 ```
 
-This Protempa destination loads data into Neo4j in its embedded mode for performance. It will shut Neo4j server down at the beginning of the data load, and start it after the data load has ended.
+This Protempa destination loads data into Neo4j using Neo4j's embedded mode for performance. It will shut Neo4j server down at the beginning of the data load, and start it after the data load has ended.
 
 ## License
 Unlike other Eureka! Clinical projects, this one is available under [GNU General Public License version 3](http://www.gnu.org/licenses/gpl-3.0-standalone.html) due to the licensing of the Neo4j libraries on which this project depends.
