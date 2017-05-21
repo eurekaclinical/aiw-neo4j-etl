@@ -64,4 +64,4 @@ try (Protempa protempa = Protempa.newInstance(sourceFactory)) {
 ```
 
 ## License
-Unlike other Eureka! Clinical projects, this one is available under [GNU Public License version 3](http://www.gnu.org/licenses/gpl-3.0-standalone.html) due to the licensing of the Neo4j libraries on which this project depends.
+Unlike other Eureka! Clinical projects, this one is available under [GNU General Public License version 3](http://www.gnu.org/licenses/gpl-3.0-standalone.html) due to the licensing of the Neo4j libraries on which this project depends.
