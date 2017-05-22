@@ -29,9 +29,10 @@ The project uses the maven build tool. Typically, you build it by invoking `mvn 
 </dependency>
 ```
 
-## Using it
+## Installation
 Just put the `aiw-neo4j-etl` jarfile and its dependencies in the classpath, and Protempa will automatically register it.
 
+## Using it
 Here is an example:
 ```
 import org.protempa.SourceFactory;
