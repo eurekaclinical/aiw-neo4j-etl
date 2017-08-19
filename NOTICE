@@ -20,14 +20,12 @@ This project includes:
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Exec under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
-  Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   ConcurrentLinkedHashMap under The Apache Software License, Version 2.0
   Datastore under Apache License, Version 2.0
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   JavaUtil under Apache License, Version 2.0
   je under Sleepycat License
-  kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
   Lucene Core under Apache 2
   mvel under The Apache Software License, Version 2.0
   Neo4j - Community under GNU General Public License, Version 3
