@@ -5,8 +5,12 @@
 ## What does it do?
 It provides a [Protempa](https://github.com/eurekaclinical/protempa) destination for loading data into a Neo4j graph database. Protempa destinations implement the `org.protempa.dest.Destination` interface and process output from the temporal abstraction process. See the Protempa project's README for more details on Protempa's architecture.
 
-## Version history
-### Version 1.0
+Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/aiw-neo4j-etl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/aiw-neo4j-etl)
+
+## Version 2.0
+Update Protempa dependency.
+
+## Version 1.0
 Supports loading and updating a Neo4j database with the output of Protempa.
 
 ## Build requirements

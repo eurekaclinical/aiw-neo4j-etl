@@ -43,7 +43,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
-import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -92,8 +91,7 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 	private final String keyType;
 	private Transaction transaction;
 	private int count;
-	private Set<String> missingPropIds;
-	private Set<String> keyTypes;
+	private final Set<String> missingPropIds;
 
 	Neo4jQueryResultsHandlerWrapped(Query inQuery, DataSource dataSource, Configuration configuration) throws QueryResultsHandlerInitException {
 		this.nodes = new HashMap<>();
@@ -133,18 +131,6 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 				deleteAll();
 			}
 			this.db = dbBuilder.newGraphDatabase();
-			if (this.query.getQueryMode() != QueryMode.REPLACE) {
-				LOGGER.debug("Grabbing proposition ids already loaded");
-				this.keyTypes = new HashSet<>();
-				try (Result distinctTypesResult = this.db.execute("MATCH (node:" + NODE_LABEL.name() + ") RETURN DISTINCT node.__type AS node_type");
-						ResourceIterator<Object> columnAs = distinctTypesResult.columnAs("node_type")) {
-					while (columnAs.hasNext()) {
-						Object next = columnAs.next();
-						this.keyTypes.add((String) next);
-					}
-				}
-				LOGGER.debug("Found proposition ids {}", this.keyTypes);
-			}
 		} catch (IOException | InterruptedException | CommandFailedException ex) {
 			throw new QueryResultsHandlerProcessingException(ex);
 		}
@@ -221,7 +207,7 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 				try {
 					node = this.db.findNode(Neo4jStatistics.NODE_LABEL, null, null);
 				} catch (MultipleFoundException ex) {
-					throw new QueryResultsHandlerProcessingException("duplicate statistics node");
+					throw new QueryResultsHandlerProcessingException("duplicate statistics node", ex);
 				}
 				if (node == null) {
 					node = this.db.createNode(Neo4jStatistics.NODE_LABEL);
@@ -245,7 +231,6 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 
 	@Override
 	public void close() throws QueryResultsHandlerCloseException {
-		this.keyTypes = null;
 		if (this.db != null) {
 			if (this.transaction != null) {
 				this.transaction.close();
@@ -270,13 +255,13 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 		String uid = inProposition.getUniqueId().getStringRepresentation();
 		MapPropositionVisitor visitor = new MapPropositionVisitor(this.configuration, this.cache);
 		Node node = null;
-		if (this.query.getQueryMode() == QueryMode.REPLACE || !this.keyTypes.contains(inProposition.getId())) {
+		if (this.query.getQueryMode() == QueryMode.REPLACE) {
 			node = this.db.createNode(NODE_LABEL);
 		} else {
 			try {
 				node = this.db.findNode(NODE_LABEL, "__uid", uid);
 			} catch (MultipleFoundException ex) {
-				throw new QueryResultsHandlerProcessingException("duplicate uid " + uid);
+				throw new QueryResultsHandlerProcessingException("duplicate uid " + uid, ex);
 			}
 
 			if (node == null) {
