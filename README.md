@@ -7,8 +7,14 @@ It provides a [Protempa](https://github.com/eurekaclinical/protempa) destination
 
 Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/aiw-neo4j-etl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/aiw-neo4j-etl)
 
+## Version 4.0
+Updated Protempa dependency.
+
+## Version 3.0
+Updated Protempa dependency.
+
 ## Version 2.0
-Update Protempa dependency.
+Updated Protempa dependency.
 
 ## Version 1.0
 Supports loading and updating a Neo4j database with the output of Protempa.
