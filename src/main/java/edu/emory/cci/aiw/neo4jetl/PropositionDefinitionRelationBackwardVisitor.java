@@ -88,7 +88,7 @@ public class PropositionDefinitionRelationBackwardVisitor extends
 
 	@Override
 	public void visit(
-			Collection<PropositionDefinition> propositionDefinitions)
+			Collection<? extends PropositionDefinition> propositionDefinitions)
 			throws ProtempaException {
 		throw new UnsupportedOperationException(
 				"Visiting collections is not supported by this visitor.");
