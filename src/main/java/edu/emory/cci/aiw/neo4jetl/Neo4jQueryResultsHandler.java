@@ -25,6 +25,7 @@ import edu.emory.cci.aiw.neo4jetl.config.Configuration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.SynchronousQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,8 +59,8 @@ public class Neo4jQueryResultsHandler extends AbstractQueryResultsHandler {
 	private volatile boolean processing;
 	private volatile String keyId;
 	private volatile List<Proposition> propositions;
-	private volatile Map<Proposition, List<Proposition>> forwardDerivations;
-	private volatile Map<Proposition, List<Proposition>> backwardDerivations;
+	private volatile Map<Proposition, Set<Proposition>> forwardDerivations;
+	private volatile Map<Proposition, Set<Proposition>> backwardDerivations;
 	private volatile Map<UniqueId, Proposition> references;
 	private volatile boolean hasPassedAfterStart;
 
@@ -165,7 +166,10 @@ public class Neo4jQueryResultsHandler extends AbstractQueryResultsHandler {
 	}
 
 	@Override
-	public void handleQueryResult(String keyId, List<Proposition> propositions, Map<Proposition, List<Proposition>> forwardDerivations, Map<Proposition, List<Proposition>> backwardDerivations, Map<UniqueId, Proposition> references) throws QueryResultsHandlerProcessingException {
+	public void handleQueryResult(String keyId, List<Proposition> propositions, 
+			Map<Proposition, Set<Proposition>> forwardDerivations, 
+			Map<Proposition, Set<Proposition>> backwardDerivations, 
+			Map<UniqueId, Proposition> references) throws QueryResultsHandlerProcessingException {
 		try {
 			doPassAfterStartIfNeeded();
 			this.keyId = keyId;

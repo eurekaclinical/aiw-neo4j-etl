@@ -140,8 +140,8 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 	@Override
 	public void handleQueryResult(String keyId,
 			List<Proposition> propositions,
-			Map<Proposition, List<Proposition>> forwardDerivations,
-			Map<Proposition, List<Proposition>> backwardDerivations,
+			Map<Proposition, Set<Proposition>> forwardDerivations,
+			Map<Proposition, Set<Proposition>> backwardDerivations,
 			Map<UniqueId, Proposition> references)
 			throws QueryResultsHandlerProcessingException {
 
@@ -333,9 +333,9 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 	}
 
 	private void handleDerivations(
-			Map<Proposition, List<Proposition>> derivations, boolean forward)
+			Map<Proposition, Set<Proposition>> derivations, boolean forward)
 			throws QueryResultsHandlerProcessingException, ProtempaException {
-		for (Map.Entry<Proposition, List<Proposition>> entry
+		for (Map.Entry<Proposition, Set<Proposition>> entry
 				: derivations.entrySet()) {
 			Proposition sourceProposition = entry.getKey();
 			Node source = this.getOrCreateNode(sourceProposition);
