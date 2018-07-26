@@ -25,7 +25,6 @@ import edu.emory.cci.aiw.neo4jetl.config.Configuration;
 import edu.emory.cci.aiw.neo4jetl.config.IndexOnProperty;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +51,7 @@ import org.protempa.DataSource;
 import org.protempa.DataSourceReadException;
 import org.protempa.KnowledgeSourceReadException;
 import org.protempa.PropositionDefinition;
+import org.protempa.PropositionDefinitionCache;
 import org.protempa.ProtempaException;
 import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
@@ -82,7 +82,7 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 	private final Map<String, Derivations.Type> deriveType;
 	private final Query query;
 	private GraphDatabaseService db;
-	private Map<String, PropositionDefinition> cache;
+	private PropositionDefinitionCache cache;
 	private final PropositionDefinitionRelationForwardVisitor forwardVisitor;
 	private final PropositionDefinitionRelationBackwardVisitor backwardVisitor;
 	private final Configuration configuration;
@@ -114,11 +114,8 @@ public class Neo4jQueryResultsHandlerWrapped extends AbstractQueryResultsHandler
 	}
 
 	@Override
-	public void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
-		this.cache = new HashMap<>();
-		for (PropositionDefinition pd : cache) {
-			this.cache.put(pd.getId(), pd);
-		}
+	public void start(PropositionDefinitionCache cache) throws QueryResultsHandlerProcessingException {
+		this.cache = cache;
 		try {
 			this.home = new Neo4jHome(this.configuration.getNeo4jHome());
 			this.home.stopServer();

@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.protempa.ParameterDefinition;
-import org.protempa.PropositionDefinition;
+import org.protempa.PropositionDefinitionCache;
 
 import org.protempa.proposition.AbstractParameter;
 import org.protempa.proposition.Constant;
@@ -39,7 +39,6 @@ import org.protempa.proposition.Proposition;
 import org.protempa.proposition.TemporalProposition;
 import org.protempa.proposition.interval.Interval;
 import org.protempa.proposition.value.Value;
-import org.protempa.proposition.value.ValueType;
 import org.protempa.proposition.visitor.PropositionVisitor;
 
 /**
@@ -49,9 +48,9 @@ class MapPropositionVisitor implements PropositionVisitor {
 
 	private final Map<String, Object> map = new HashMap<>();
 	private final Configuration configuration;
-	private final Map<String, PropositionDefinition> cache;
+	private final PropositionDefinitionCache cache;
 
-	MapPropositionVisitor(Configuration configuration, Map<String, PropositionDefinition> cache) {
+	MapPropositionVisitor(Configuration configuration, PropositionDefinitionCache cache) {
 		this.configuration = configuration;
 		this.cache = cache;
 	}

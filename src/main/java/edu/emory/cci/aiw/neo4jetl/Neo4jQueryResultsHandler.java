@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.protempa.DataSource;
 import org.protempa.PropositionDefinition;
+import org.protempa.PropositionDefinitionCache;
 import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerInitException;
@@ -55,7 +56,7 @@ public class Neo4jQueryResultsHandler extends AbstractQueryResultsHandler {
 	private final SynchronousQueue startSynchronousQueue;
 	private final SynchronousQueue endSynchronousQueue;
 	private final Object handoffObject;
-	private volatile Collection<PropositionDefinition> cache;
+	private volatile PropositionDefinitionCache cache;
 	private volatile boolean processing;
 	private volatile String keyId;
 	private volatile List<Proposition> propositions;
@@ -152,7 +153,7 @@ public class Neo4jQueryResultsHandler extends AbstractQueryResultsHandler {
 	}
 
 	@Override
-	public void start(final Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
+	public void start(PropositionDefinitionCache cache) throws QueryResultsHandlerProcessingException {
 		this.cache = cache;
 		this.processing = true;
 		this.hasPassedAfterStart = false;
