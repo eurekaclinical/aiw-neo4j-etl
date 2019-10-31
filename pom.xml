@@ -5,7 +5,7 @@
 	<groupId>org.eurekaclinical</groupId>
 	<artifactId>aiw-neo4j-etl</artifactId>
 	<name>AIW Neo4j ETL</name>
-	<version>4.1-SNAPSHOT</version>
+	<version>4.2-SNAPSHOT</version>
 	<inceptionYear>2015</inceptionYear>
 	<description>AIW Neo4j ETL is a Protempa query results handler for loading data and 
 		abstractions into the Neo4j graph database.</description>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>3</version>
+		<version>4-Alpha-3-SNAPSHOT</version>
 	</parent>
     
 	<url>https://github.com/eurekaclinical/aiw-neo4j-etl.git</url>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
-			<version>[5.0,6.0)</version>
+			<version>5.1-Beta-3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
