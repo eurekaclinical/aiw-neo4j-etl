@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>4-Alpha-3-SNAPSHOT</version>
+		<version>4-Alpha-3</version>
 	</parent>
     
 	<url>https://github.com/eurekaclinical/aiw-neo4j-etl.git</url>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
-			<version>5.1-Beta-3-SNAPSHOT</version>
+			<version>5.1-Beta-3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
